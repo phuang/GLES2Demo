@@ -23,9 +23,21 @@ public class MyActivity extends Activity {
         mGLView.setDebugFlags(GLSurfaceView.DEBUG_CHECK_GL_ERROR | GLSurfaceView.DEBUG_LOG_GL_CALLS);
         mGLView.setEGLContextClientVersion(2);
         mGLView.setPreserveEGLContextOnPause(true);
-        mGLView.setRenderer(new GLES20Renderer());
+        mGLView.setRenderer(new GLES20Renderer(this));
 
         setContentView(mGLView);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mGLView.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mGLView.onPause();
     }
 
 
