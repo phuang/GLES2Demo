@@ -28,7 +28,6 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
     private final String kFragmentShader = new StringBuilder()
             .append("varying vec4 vColor;      \n")
-            .append("varying vec2 vTexCoord;   \n")
             .append("void main() {             \n")
             .append("  gl_FragColor = vColor;  \n")
             .append("}\n")
@@ -72,7 +71,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
     public void onDrawFrame(GL10 gl10) {
         GLES20.glClear(
                 GLES20.GL_COLOR_BUFFER_BIT |
-                GLES20.GL_DEPTH_BUFFER_BIT);
+                        GLES20.GL_DEPTH_BUFFER_BIT);
         drawFrame();
     }
 
