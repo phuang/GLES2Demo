@@ -16,29 +16,35 @@ import javax.microedition.khronos.opengles.GL10;
 public class GLES20Renderer implements GLSurfaceView.Renderer {
 
     private static final String TAG = "GLES20Renderer";
-    private final String kVertexShader =
-            "attribute vec4 aPosition;      \n" +
-            "attribute vec4 aColor;         \n" +
-            "varying vec4 vColor;           \n" +
-            "void main() {                  \n" +
-            "  gl_Position = aPosition;     \n" +
-            "  vColor = aColor;          \n" +
-            "}\n";
-    private final String kFragmentShader =
-            "precision mediump float;       \n" +
-                    "varying vec4 vColor;           \n" +
-                    "void main() {                  \n" +
-                    "  gl_FragColor = vColor;       \n" +
-                    "}\n";
+    private final String kVertexShader = new StringBuilder()
+            .append("attribute vec4 aPosition;  \n")
+            .append("attribute vec4 aColor;     \n")
+            .append("varying vec4 vColor;       \n")
+            .append("void main() {              \n")
+            .append("  gl_Position = aPosition; \n")
+            .append("  vColor = aColor;         \n")
+            .append("}\n")
+            .toString();
+
+    private final String kFragmentShader = new StringBuilder()
+            .append("varying vec4 vColor;      \n")
+            .append("varying vec2 vTexCoord;   \n")
+            .append("void main() {             \n")
+            .append("  gl_FragColor = vColor;  \n")
+            .append("}\n")
+            .toString();
+
     private final float kVertex[] = {
             -1f, -1f, -1f, 1f, 1f, -1f, 1f, 1f,
     };
+
     private final float kColor[] = {
             1f, 0f, 0f, 1f,
             0f, 1f, 0f, 1f,
             0f, 0f, 1f, 1f,
             1f, 1f, 1f, 1f,
     };
+
     private int mWidth;
     private int mHeight;
     private int mProgram;
@@ -115,7 +121,6 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
         GLES20.glEnableVertexAttribArray(color);
         GLES20.glVertexAttribPointer(color, 4, GLES20.GL_FLOAT, false, 0, mBufferColor);
 
-        // GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, mBuffer);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
     }
 }
