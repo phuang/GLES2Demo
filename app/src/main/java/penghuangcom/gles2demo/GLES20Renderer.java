@@ -72,10 +72,13 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onDrawFrame(GL10 gl10) {
-        GLES20.glClear(
-                GLES20.GL_COLOR_BUFFER_BIT |
-                        GLES20.GL_DEPTH_BUFFER_BIT);
-        drawFrame();
+        for (int i = 0; i < 5; i++) {
+            GLES20.glClear(
+                    GLES20.GL_COLOR_BUFFER_BIT |
+                            GLES20.GL_DEPTH_BUFFER_BIT);
+            drawFrame();
+        }
+        mFrameCount++;
     }
 
     void initGL() {
@@ -123,7 +126,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
         GLES20.glEnableVertexAttribArray(color);
         GLES20.glVertexAttribPointer(color, 4, GLES20.GL_FLOAT, false, 0, mBufferColor);
 
-        final double factor = Math.abs(Math.sin((Math.PI / 90.0) * mFrameCount++)) * 0.5 + 0.5;
+        final double factor = Math.abs(Math.sin((Math.PI / 90.0) * mFrameCount)) * 0.5 + 0.5;
         final float[] matrix = {
                 (float) factor, 0, 0, 0,
                 0, (float) factor, 0, 0,
