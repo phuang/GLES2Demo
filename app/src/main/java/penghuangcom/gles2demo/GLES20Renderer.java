@@ -17,11 +17,12 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
     private static final String TAG = "GLES20Renderer";
     private final String kVertexShader = new StringBuilder()
+            .append("uniform mat4 uFactor;      \n")
             .append("attribute vec4 aPosition;  \n")
             .append("attribute vec4 aColor;     \n")
             .append("varying vec4 vColor;       \n")
             .append("void main() {              \n")
-            .append("  gl_Position = aPosition; \n")
+            .append("  gl_Position = aPosition * uFactor; \n")
             .append("  vColor = aColor;         \n")
             .append("}\n")
             .toString();
@@ -49,6 +50,8 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
     private int mProgram;
     private FloatBuffer mBufferVertex;
     private FloatBuffer mBufferColor;
+
+    private int mFrameCount = 0;
 
     public GLES20Renderer() {
     }
@@ -119,6 +122,18 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
         int color = GLES20.glGetAttribLocation(mProgram, "aColor");
         GLES20.glEnableVertexAttribArray(color);
         GLES20.glVertexAttribPointer(color, 4, GLES20.GL_FLOAT, false, 0, mBufferColor);
+
+        final double factor = Math.abs(Math.sin((Math.PI / 90.0) * mFrameCount++)) * 0.5 + 0.5;
+        final float[] matrix = {
+                (float) factor, 0, 0, 0,
+                0, (float) factor, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+        };
+        GLES20.glUniformMatrix4fv(GLES20.glGetUniformLocation(mProgram, "uFactor"), 1, false,
+                matrix, 0);
+
+
 
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
     }
