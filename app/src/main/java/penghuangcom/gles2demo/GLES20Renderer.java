@@ -6,6 +6,7 @@ import android.opengl.GLSurfaceView;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -17,12 +18,11 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
     private static final String TAG = "GLES20Renderer";
     private final String kVertexShader = new StringBuilder()
-            .append("uniform mat4 uFactor;      \n")
             .append("attribute vec4 aPosition;  \n")
             .append("attribute vec4 aColor;     \n")
             .append("varying vec4 vColor;       \n")
             .append("void main() {              \n")
-            .append("  gl_Position = aPosition * uFactor; \n")
+            .append("  gl_Position = aPosition; \n")
             .append("  vColor = aColor;         \n")
             .append("}\n")
             .toString();
@@ -38,18 +38,18 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
             -1f, -1f, -1f, 1f, 1f, -1f, 1f, 1f,
     };
 
-    private final float kColor[] = {
-            1f, 0f, 0f, 1f,
-            0f, 1f, 0f, 1f,
-            0f, 0f, 1f, 1f,
-            1f, 1f, 1f, 1f,
+    private final int kColor[] = {
+            0x10000, 0, 0, 0x10000,
+            0, 0x10000, 0, 0x10000,
+            0, 0, 0x10000, 0x10000,
+            0x10000, 0x10000, 0x10000, 0x10000,
     };
 
     private int mWidth;
     private int mHeight;
     private int mProgram;
     private FloatBuffer mBufferVertex;
-    private FloatBuffer mBufferColor;
+    private IntBuffer mBufferColor;
 
     private int mFrameCount = 0;
 
@@ -72,7 +72,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onDrawFrame(GL10 gl10) {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 1; i++) {
             GLES20.glClear(
                     GLES20.GL_COLOR_BUFFER_BIT |
                             GLES20.GL_DEPTH_BUFFER_BIT);
@@ -103,7 +103,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
         mBufferColor = ByteBuffer.allocateDirect(4 * kColor.length)
                 .order(ByteOrder.nativeOrder())
-                .asFloatBuffer();
+                .asIntBuffer();
         mBufferColor.put(kColor).position(0);
 
 /*
@@ -124,8 +124,9 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
         int color = GLES20.glGetAttribLocation(mProgram, "aColor");
         GLES20.glEnableVertexAttribArray(color);
-        GLES20.glVertexAttribPointer(color, 4, GLES20.GL_FLOAT, false, 0, mBufferColor);
+        GLES20.glVertexAttribPointer(color, 4, GLES20.GL_FIXED, false, 0, mBufferColor);
 
+/*
         final double factor = Math.abs(Math.sin((Math.PI / 90.0) * mFrameCount)) * 0.5 + 0.5;
         final float[] matrix = {
                 (float) factor, 0, 0, 0,
@@ -135,6 +136,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
         };
         GLES20.glUniformMatrix4fv(GLES20.glGetUniformLocation(mProgram, "uFactor"), 1, false,
                 matrix, 0);
+*/
 
 
 
