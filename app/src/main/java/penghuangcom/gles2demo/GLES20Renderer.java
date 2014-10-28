@@ -5,7 +5,6 @@ import android.opengl.GLSurfaceView;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -34,21 +33,22 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
             .append("}\n")
             .toString();
 
-    private final float kVertex[] = {
-            -1f, -1f, -1f, 1f, 1f, -1f, 1f, 1f,
+    private final int kOne = 0x10000;
+    private final int kVertex[] = {
+            -kOne, -kOne, -kOne, kOne, kOne, -kOne, kOne, kOne
     };
 
     private final int kColor[] = {
-            0x10000, 0, 0, 0x10000,
-            0, 0x10000, 0, 0x10000,
-            0, 0, 0x10000, 0x10000,
-            0x10000, 0x10000, 0x10000, 0x10000,
+            kOne, 0, 0, kOne,
+            0, kOne, 0, kOne,
+            0, 0, kOne, kOne,
+            kOne, kOne, kOne, kOne,
     };
 
     private int mWidth;
     private int mHeight;
     private int mProgram;
-    private FloatBuffer mBufferVertex;
+    private IntBuffer mBufferVertex;
     private IntBuffer mBufferColor;
 
     private int mFrameCount = 0;
@@ -98,7 +98,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
         mBufferVertex = ByteBuffer.allocateDirect(4 * kVertex.length)
                 .order(ByteOrder.nativeOrder())
-                .asFloatBuffer();
+                .asIntBuffer();
         mBufferVertex.put(kVertex).position(0);
 
         mBufferColor = ByteBuffer.allocateDirect(4 * kColor.length)
@@ -120,7 +120,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
         int position = GLES20.glGetAttribLocation(mProgram, "aPosition");
         GLES20.glEnableVertexAttribArray(position);
-        GLES20.glVertexAttribPointer(position, 2, GLES20.GL_FLOAT, false, 0, mBufferVertex);
+        GLES20.glVertexAttribPointer(position, 2, GLES20.GL_FIXED, false, 0, mBufferVertex);
 
         int color = GLES20.glGetAttribLocation(mProgram, "aColor");
         GLES20.glEnableVertexAttribArray(color);
